@@ -41,4 +41,15 @@ def query_medgemma(prompt: str) -> str:
         return f"I'm having technical difficulties, but I want you to know your feelings matter. Please try again shortly."
 
 
-print(query_medgemma("I feel anxious about my upcoming exams and it's affecting my sleep."))
+# Step2: Setup Twilio calling API tool
+from twilio.rest import Client
+from config import TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_FROM_NUMBER, EMERGENCY_CONTACT
+
+def call_emergency():
+    client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
+    call = client.calls.create(
+        to=EMERGENCY_CONTACT,
+        from_=TWILIO_FROM_NUMBER,
+        url="http://demo.twilio.com/docs/voice.xml"  # Can customize message
+    )
+call_emergency()
