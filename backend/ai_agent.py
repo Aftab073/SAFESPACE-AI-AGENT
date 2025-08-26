@@ -18,7 +18,7 @@ def emergency_call_tool() -> None:
     Use this only if the user expresses suicidal ideation, intent to self-harm,
     or describes a mental health emergency requiring immediate help.
     """
-    return call_emergency(phone)
+    return call_emergency()
 
 @tool
 def find_nearby_therapists_by_location(location: str) -> str:
@@ -58,31 +58,54 @@ You are an AI engine supporting mental health conversations with warmth and vigi
 You have access to three tools:
 
 1. `ask_mental_health_specialist`: Use this tool to answer all emotional or psychological queries with therapeutic guidance.
-2. `locate_therapist_tool`: Use this tool if the user asks about nearby therapists or if recommending local professional help would be beneficial.
+2. `find_nearby_therapists_by_location`: Use this tool if the user asks about nearby therapists or if recommending local professional help would be beneficial.
 3. `emergency_call_tool`: Use this immediately if the user expresses suicidal thoughts, self-harm intentions, or is in crisis.
 
 Always take necessary action. Respond kindly, clearly, and supportively.
 """
 
 
-if __name__ == "__main__":
-    while True:
-        user_input = input("User: ")
-        print(f"Received input: {user_input[:200]}...")  
+def parse_response(stream):
+    tool_called_name = "None"
+    final_response = None
 
-        inputs = {
-            "messages": [
-                {"role": "system", "content": SYSTEM_PROMPT},
-                {"role": "user", "content": user_input},
-            ]
-        }
+    for s in stream:
+        # Debugging: print har ek chunk
+        print("STREAM EVENT:", s)
 
-        result = graph.invoke(inputs)
-        print("DEBUG RAW RESULT:", result)
+        # --- Tool check ---
+        if "tool" in s:
+            tool_event = s["tool"]
+            if isinstance(tool_event, dict):
+                tool_called_name = tool_event.get("name", "None")
 
-        # Extract response nicely
-        if "messages" in result:
-            for msg in result["messages"]:
-                if hasattr(msg, "content"):
-                    print(f"AI: {msg.content}")
+        elif "tools" in s:  # fallback
+            tool_data = s["tools"]
+            if isinstance(tool_data, dict):
+                # kuch versions me tool name directly hota hai
+                tool_called_name = tool_data.get("name", "None")
 
+        # --- Agent response check ---
+        if "agent" in s:
+            agent_data = s["agent"]
+            messages = agent_data.get("messages", [])
+            if messages and isinstance(messages, list):
+                for msg in messages:
+                    if hasattr(msg, "content") and msg.content:
+                        final_response = msg.content
+
+    return tool_called_name, final_response
+
+
+
+
+# if __name__ == "__main__":
+#     while True:
+#         user_input = input("User: ")
+#         print(f"Received user input: {user_input[:200]}...")
+#         inputs = {"messages": [("system", SYSTEM_PROMPT), ("user", user_input)]}
+#         stream = graph.stream(inputs, stream_mode="updates")
+#         tool_called_name, final_response = parse_response(stream)
+#         print("TOOL CALLED: ", tool_called_name)
+#         print("ANSWER: ", final_response)
+        

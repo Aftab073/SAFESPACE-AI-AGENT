@@ -52,4 +52,3 @@ def call_emergency():
         from_=TWILIO_FROM_NUMBER,
         url="http://demo.twilio.com/docs/voice.xml"  # Can customize message
     )
-call_emergency()
