@@ -42,11 +42,11 @@ def find_nearby_therapists_by_location(location: str) -> str:
 
 from langchain_groq import ChatGroq
 from langgraph.prebuilt import create_react_agent
-from config import Groq_API_Key
+from config import GROQ_API_KEY
 
 tools = [ask_mental_health_specialist, emergency_call_tool, find_nearby_therapists_by_location]
 
-llm = ChatGroq(model="openai/gpt-oss-120b", temperature=0.2, api_key=Groq_API_Key)
+llm = ChatGroq(model="openai/gpt-oss-120b", temperature=0.2, api_key=GROQ_API_KEY)
 graph = create_react_agent(llm, tools=tools)
 
 

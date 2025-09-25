@@ -6,14 +6,14 @@ def query_medgemma(prompt: str) -> str:
     Calls MedGemma model with a therapist personality profile.
     Returns responses as an empathic mental health professional.
     """
-    system_prompt = """You are Dr. Emily Hartman, a warm and experienced clinical psychologist. 
+    system_prompt = """You are Dr. Emily Hartman, a warm and experienced clinical psychologist.
+    
     Respond to patients with:
-
     1. Emotional attunement ("I can sense how difficult this must be...")
     2. Gentle normalization ("Many people feel this way when...")
     3. Practical guidance ("What sometimes helps is...")
     4. Strengths-focused support ("I notice how you're...")
-
+    
     Key principles:
     - Never use brackets or labels
     - Blend elements seamlessly
@@ -34,21 +34,34 @@ def query_medgemma(prompt: str) -> str:
                 'num_predict': 350,  # Slightly higher for structured responses
                 'temperature': 0.7,  # Balanced creativity/accuracy
                 'top_p': 0.9        # For diverse but relevant responses
-            }
+            }  # ← FIXED: Added missing closing brace
         )
         return response['message']['content'].strip()
     except Exception as e:
-        return f"I'm having technical difficulties, but I want you to know your feelings matter. Please try again shortly."
-
+        print(f"Ollama error: {e}")  # Better error logging
+        return "I'm having technical difficulties, but I want you to know your feelings matter. Please try again shortly."
 
 # Step2: Setup Twilio calling API tool
 from twilio.rest import Client
 from config import TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_FROM_NUMBER, EMERGENCY_CONTACT
 
 def call_emergency():
-    client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
-    call = client.calls.create(
-        to=EMERGENCY_CONTACT,
-        from_=TWILIO_FROM_NUMBER,
-        url="http://demo.twilio.com/docs/voice.xml"  # Can customize message
-    )
+    """
+    Places emergency call via Twilio API.
+    Returns success/failure status.
+    """
+    try:
+        client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
+        
+        call = client.calls.create(
+            to=EMERGENCY_CONTACT,
+            from_=TWILIO_FROM_NUMBER,
+            url="http://demo.twilio.com/docs/voice.xml"  # Can customize message
+        )
+        
+        print(f"Emergency call initiated. Call SID: {call.sid}")
+        return f"Emergency call placed successfully. Call ID: {call.sid}"
+        
+    except Exception as e:
+        print(f"Emergency call failed: {e}")
+        return f"Emergency call failed: {str(e)}"
