@@ -69,6 +69,7 @@ def login_page():
                         try:
                             response = requests.post(f"{BACKEND_URL}/auth/login", 
                                                    json={"email": email, "password": password})
+
                             if response.status_code == 200:
                                 data = response.json()
                                 st.session_state.token = data["access_token"]
