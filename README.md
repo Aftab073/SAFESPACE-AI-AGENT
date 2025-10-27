@@ -1,251 +1,277 @@
-Perfect! Here's a comprehensive **README.md** for your SafeSpace project:
+
 
 ```markdown
-# 🧠 SafeSpace - AI Mental Health Therapist
+# 🧠 SafeSpace - AI Mental Health Companion
 
-SafeSpace is an AI-powered mental health companion built with FastAPI and Streamlit. It provides 24/7 emotional support, stress management guidance, and coping strategies through intelligent conversational AI.
+An intelligent, empathetic AI-powered mental health support system that provides 24/7 emotional support, crisis detection, and therapeutic guidance.
 
-![SafeSpace](https://img.shields.io/badge/Status-Active-success)
-![Python](https://img.shields.io/badge/Python-3.11+-blue)
-![FastAPI](https://img.shields.io/badge/FastAPI-0.104+-green)
-![Streamlit](https://img.shields.io/badge/Streamlit-1.28+-red)
+![SafeSpace Banner](https://user-gen-media-assets.s3.amazonaws.com/seedream_images/c6be5ff2-50b8-432c-84a9-47e46f9d1c08.png)
 
-## AI Features
+## 🌟 Live Demo
 
-### MedGemma Integration
-- Powered by **Groq's OpenAI GPT model** for therapeutic responses
-- Uses MedGemma for medical-grade mental health guidance
-- Evidence-based, empathetic conversations
+**🔗 Try it now:** [https://safespace1.streamlit.app/]
 
-### Emergency Response System
-- **Automatic crisis detection** for suicidal ideation or self-harm
-- **Twilio-powered emergency calling** to safety helplines
-- Immediate intervention when needed
+**📚 API Documentation:** [https://safespace-backend-vgv4.onrender.com/docs]
 
-### Therapist Finder
-- Location-based therapist recommendations
-- Licensed professional contact information
-- Quick access to local mental health resources
-
+---
 
 ## ✨ Features
 
-- 🔐 **Secure Authentication** - JWT-based user authentication with password hashing
-- 💬 **AI-Powered Conversations** - Intelligent responses using LangChain and AI agents
-- 📚 **Chat History** - Persistent conversation storage with load last 15 messages feature
-- 🗑️ **History Management** - Clear chat history functionality
-- 📊 **Usage Tracking** - Monthly message limits and usage statistics
-- 🎨 **Modern UI** - Clean, responsive Streamlit interface with professional styling
-- 🔒 **Privacy-Focused** - User data encrypted and securely stored
-- 🚀 **Production Ready** - SQLite for local, PostgreSQL for deployment
+### 🤖 AI-Powered Therapy
+- Conversational AI trained on mental health best practices
+- Empathetic, non-judgmental responses
+- Evidence-based coping strategies
+- Personalized emotional support
+
+### 🚨 Crisis Detection & Emergency Response
+- Real-time analysis of user messages for crisis indicators
+- Automatic emergency contact via Twilio
+- Immediate intervention for high-risk situations
+- Safety-first approach
+
+### 💬 Intelligent Conversation Management
+- Persistent chat history with PostgreSQL
+- Context-aware responses
+- Load previous conversations
+- Clear history option
+
+### 🔐 Secure Authentication
+- JWT-based authentication
+- Bcrypt password hashing
+- Protected API endpoints
+- User session management
+
+### 🔍 Additional Tools
+- **Therapist Finder**: Locate licensed mental health professionals
+- **Mood Tracking**: Monitor emotional patterns (coming soon)
+- **Resource Library**: Access mental health resources (coming soon)
+
+---
+
+## 📸 Screenshots
+
+### Login & Registration
+![Login Page](./screenshots/login.png)
+*Secure user authentication with modern UI*
+
+### Chat Interface
+![Chat Interface](./screenshots/chat.png)
+*Clean, intuitive conversation interface*
+
+### Chat History
+![History Management](./screenshots/history.png)
+*Load and manage previous conversations*
+
+### Emergency Response
+![Emergency Detection](./screenshots/emergency.png)
+*Automatic crisis detection and intervention*
+
+---
+
+## 🏗️ Architecture
+
+```
+┌─────────────────┐
+│   Streamlit     │ ← Frontend (User Interface)
+│   Cloud         │
+└────────┬────────┘
+         │ HTTPS
+         │
+┌────────▼────────┐
+│   FastAPI       │ ← Backend API
+│   (Render)      │
+└────┬────────┬───┘
+     │        │
+     │        └─────► PostgreSQL (User Data & History)
+     │
+     ├──────────────► Groq API (AI Model - LLaMa)
+     │
+     ├──────────────► Twilio (Emergency Calls)
+     │
+     └──────────────► LangChain (Agent Framework)
+```
+
+---
 
 ## 🛠️ Tech Stack
 
-### Backend
-- **FastAPI** - Modern, fast web framework for building APIs
-- **SQLAlchemy** - SQL toolkit and ORM
-- **LangChain** - Framework for developing AI applications
-- **Passlib** - Password hashing library (bcrypt)
-- **Python-Jose** - JWT token creation and validation
-- **Uvicorn** - ASGI server
-
 ### Frontend
-- **Streamlit** - Fast way to build data apps
-- **Requests** - HTTP library for API calls
+- **Streamlit** - Interactive web interface
+- **Python Requests** - API communication
 
-### Database
-- **SQLite** - Local development database
-- **PostgreSQL** - Production database (Render deployment)
+### Backend
+- **FastAPI** - Modern Python web framework
+- **Uvicorn** - ASGI server
+- **SQLAlchemy** - Database ORM
+- **PostgreSQL** - Relational database
 
-### Package Manager
-- **uv** - Fast Python package installer and resolver
+### AI & ML
+- **LangChain** - AI agent framework
+- **LangGraph** - Agent workflow orchestration
+- **Groq API** - LLaMA model inference
+- **OpenAI GPT** - Natural language processing
 
-## 📋 Prerequisites
+### Authentication & Security
+- **JWT** - Token-based authentication
+- **Bcrypt** - Password hashing
+- **Python-JOSE** - JWT handling
 
-- Python 3.11 or higher
-- uv package manager
-- API keys for AI services (OpenAI, Anthropic, etc.)
+### External Services
+- **Twilio** - Emergency call system
+- **Render** - Backend hosting
+- **Streamlit Cloud** - Frontend hosting
 
-## 🚀 Installation
+---
 
-### 1. Clone the Repository
+## 🚀 Getting Started
 
+### Prerequisites
+- Python 3.12+
+- PostgreSQL (for production)
+- Groq API Key
+- Twilio Account (for emergency features)
+
+### Local Development
+
+1. **Clone the repository**
 ```
 git clone https://github.com/Aftab073/SAFESPACE-AI-AGENT.git
-cd safespace
+cd SAFESPACE-AI-AGENT
 ```
 
-### 2. Install uv (if not already installed)
+2. **Set up environment variables**
 
+Create a `.env` file:
 ```
-# macOS/Linux
-curl -LsSf https://astral.sh/uv/install.sh | sh
+# Groq API
+GROQ_API_KEY=your_groq_api_key
 
-# Windows
-powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
-```
+# Twilio
+TWILIO_ACCOUNT_SID=your_twilio_sid
+TWILIO_AUTH_TOKEN=your_twilio_token
+TWILIO_FROM_NUMBER=+1234567890
+EMERGENCY_CONTACT=+1234567890
 
-### 3. Install Dependencies
-
-```
-uv sync
-```
-
-### 4. Set Up Environment Variables
-
-Create a `.env` file in the root directory:
-
-```
-# Backend Configuration
-BACKEND_URL=http://localhost:8000
-
-# JWT Configuration
-JWT_SECRET_KEY=your-super-secret-key-change-this-in-production
+# JWT
+JWT_SECRET_KEY=your_secret_key
 JWT_ALGORITHM=HS256
 JWT_ACCESS_TOKEN_EXPIRE_MINUTES=1440
 
-# Database (leave empty for SQLite, or add PostgreSQL URL for production)
-DATABASE_URL=
-
-# AI Service API Keys
-OPENAI_API_KEY=your-openai-api-key
-ANTHROPIC_API_KEY=your-anthropic-api-key
+# Backend
+BACKEND_URL=http://localhost:8000
 ```
 
-## ▶️ Running the Application
+3. **Install dependencies**
+```
+# Using uv (recommended)
+uv sync
 
-### Start the Backend Server
+# Or using pip
+pip install -r requirements-backend.txt
+pip install -r requirements.txt
+```
 
+4. **Run the backend**
 ```
 uv run python main.py
+# or
+uvicorn main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-The API will be available at `http://localhost:8000`
-- API Documentation: `http://localhost:8000/docs`
-- Alternative Docs: `http://localhost:8000/redoc`
-
-### Start the Frontend
-
-In a separate terminal:
-
+5. **Run the frontend**
 ```
 uv run streamlit run frontend.py
+# or
+streamlit run frontend.py
 ```
 
-The app will open in your browser at `http://localhost:8501`
+6. **Access the application**
+- Frontend: http://localhost:8501
+- Backend API: http://localhost:8000
+- API Docs: http://localhost:8000/docs
+
+---
+
+
+
+---
 
 ## 📁 Project Structure
 
 ```
-safespace/
-├── ai_agent.py          # AI agent logic with LangChain
-├── auth.py              # Authentication (JWT, password hashing)
-├── config.py            # Configuration settings
-├── database.py          # Database models and operations
-├── frontend.py          # Streamlit UI
-├── main.py              # FastAPI application
-├── models.py            # Pydantic models
-├── tools.py             # AI agent tools
-├── .env                 # Environment variables (create this)
-├── pyproject.toml       # Project dependencies
-├── uv.lock              # Dependency lock file
-└── README.md            # This file
+SAFESPACE-AI-AGENT/
+├── frontend.py              # Streamlit UI
+├── main.py                  # FastAPI backend
+├── ai_agent.py              # LangChain agent logic
+├── auth.py                  # Authentication & JWT
+├── database.py              # Database models & operations
+├── models.py                # Pydantic models
+├── config.py                # Configuration
+├── tools.py                 # AI agent tools
+├── requirements.txt         # Frontend dependencies
+├── requirements-backend.txt # Backend dependencies
+├── .env.example            # Environment variables template
+└── README.md               # This file
 ```
 
-## 🔌 API Endpoints
+---
 
-### Authentication
+## 🔑 Environment Variables
 
-- `POST /auth/register` - Register new user
-- `POST /auth/login` - Login user
-- `GET /auth/me` - Get current user profile
+| Variable | Description | Required |
+|----------|-------------|----------|
+| `GROQ_API_KEY` | Groq API key for AI model | Yes |
+| `TWILIO_ACCOUNT_SID` | Twilio account SID | Yes |
+| `TWILIO_AUTH_TOKEN` | Twilio auth token | Yes |
+| `TWILIO_FROM_NUMBER` | Twilio phone number | Yes |
+| `EMERGENCY_CONTACT` | Emergency contact number | Yes |
+| `JWT_SECRET_KEY` | Secret key for JWT tokens | Yes |
+| `JWT_ALGORITHM` | Algorithm for JWT (default: HS256) | No |
+| `JWT_ACCESS_TOKEN_EXPIRE_MINUTES` | Token expiry time | No |
+| `DATABASE_URL` | PostgreSQL connection string | Production only |
+| `BACKEND_URL` | Backend API URL | Yes |
 
-### Chat
-
-- `POST /ask` - Send message to AI (protected)
-- `GET /chat/history?limit=15` - Get chat history (protected)
-- `DELETE /chat/history` - Clear chat history (protected)
-
-### Usage
-
-- `GET /usage` - Get usage statistics (protected)
-
-### Health
-
-- `GET /health` - Health check endpoint
-
-
-### Database Setup
-
-1. Create a **PostgreSQL** database on Render
-2. Copy the **Internal Database URL**
-3. Add it as `DATABASE_URL` environment variable to your backend service
-
-## 🗄️ Database Schema
-
-### Users Table
-- `id` - UUID primary key
-- `email` - Unique email address
-- `full_name` - Optional full name
-- `password_hash` - Bcrypt hashed password
-- `created_at` - Registration timestamp
-- `is_active` - Account status
-
-### Chat History Table
-- `id` - UUID primary key
-- `user_id` - Foreign key to users
-- `message` - User message
-- `response` - AI response
-- `tool_used` - AI tool used
-- `created_at` - Message timestamp
-
-### User Usage Table
-- `user_id` - Primary key, foreign key to users
-- `messages_used_this_month` - Message count
-- `current_period_start` - Billing period start
-- `current_period_end` - Billing period end
-- `last_reset_date` - Last reset timestamp
-
-## 🎨 Features Overview
-
-### Welcome Message
-Users are greeted with a professional welcome message explaining SafeSpace capabilities:
-- Stress management
-- Mood tracking
-- Coping strategies
-- Safe space for expression
-
-### Chat History
-- Load last 15 messages for quick context
-- Clear all history with one click
-- Automatic saving of all conversations
-
-### Usage Tracking
-- 50 messages per month (free tier)
-- Automatic monthly reset
-- Usage statistics display
-
-## 🔒 Security
-
-- Passwords hashed with bcrypt
-- JWT tokens for authentication
-- Environment-based secret keys
-- SQL injection protection via SQLAlchemy ORM
-- CORS configuration for frontend access
+---
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are welcome! Please follow these steps:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
 
-## 👨‍💻 Author
-
-Aftab Tamboli - [GitHub](https://github.com/Aftab073)
 
 ## 🙏 Acknowledgments
 
-- OpenAI for AI capabilities
-- Streamlit for the amazing UI framework
-- FastAPI for the robust backend framework
-- LangChain for AI agent orchestration
+- **Groq** - For providing fast AI inference
+- **LangChain** - For agent framework
+- **Streamlit** - For the amazing frontend framework
+- **Render** - For reliable backend hosting
+- **Twilio** - For emergency communication services
+
+---
+
+
+
+---
+
+## ⚠️ Disclaimer
+
+SafeSpace is an AI-powered support tool and **NOT a replacement for professional mental health care**. If you're experiencing a mental health crisis, please:
+
+- 🆘 Call your local emergency services (911 in US)
+- 📞 Contact a crisis helpline (988 in US)
+- 🏥 Visit the nearest emergency room
+- 👨‍⚕️ Reach out to a licensed mental health professional
+
+---
+
+**Made with ❤️ for mental health awareness**
+
+
+***
 
