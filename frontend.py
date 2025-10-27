@@ -188,3 +188,9 @@ def chat_page():
             st.session_state.chat_history.append({"role": "assistant", "content": "Sorry, I'm having technical difficulties. Please try again."})
         
         st.rerun()
+
+
+if st.session_state.token is None:
+    login_page()
+else:
+    chat_page()

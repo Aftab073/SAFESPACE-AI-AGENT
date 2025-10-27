@@ -210,8 +210,10 @@ def initialize_user_usage(user_id: str) -> None:
     try:
         now = datetime.now(timezone.utc)
         last_day = calendar.monthrange(now.year, now.month)[1]
-        period_end = now.replace(day=last_day, hour=23, minute=59, second=59)
-        period_start = now.replace(day=1, hour=0, minute=0, second=0)
+        
+        # Create timezone-aware datetimes
+        period_end = now.replace(day=last_day, hour=23, minute=59, second=59, microsecond=0)
+        period_start = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
         
         usage = UserUsageDB(
             user_id=user_id,
@@ -225,6 +227,7 @@ def initialize_user_usage(user_id: str) -> None:
         db.commit()
     finally:
         db.close()
+
 
 
 def get_user_usage(user_id: str) -> dict:
@@ -265,7 +268,13 @@ def increment_user_usage(user_id: str) -> dict:
         # Check if we need to reset monthly counter
         now = datetime.now(timezone.utc)
         
-        if now > usage.current_period_end:
+        # Make sure both datetimes are timezone-aware for comparison
+        period_end = usage.current_period_end
+        if period_end.tzinfo is None:
+            # If stored datetime is naive, make it UTC-aware
+            period_end = period_end.replace(tzinfo=timezone.utc)
+        
+        if now > period_end:
             reset_monthly_usage(user_id)
             db.close()
             db = SessionLocal()
@@ -287,6 +296,7 @@ def increment_user_usage(user_id: str) -> dict:
         db.close()
 
 
+
 def reset_monthly_usage(user_id: str) -> None:
     """Reset user's monthly message count"""
     db = SessionLocal()
@@ -294,8 +304,10 @@ def reset_monthly_usage(user_id: str) -> None:
     try:
         now = datetime.now(timezone.utc)
         last_day = calendar.monthrange(now.year, now.month)[1]
-        period_end = now.replace(day=last_day, hour=23, minute=59, second=59)
-        period_start = now.replace(day=1, hour=0, minute=0, second=0)
+        
+        # Create timezone-aware datetimes
+        period_end = now.replace(day=last_day, hour=23, minute=59, second=59, microsecond=0)
+        period_start = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
         
         usage = db.query(UserUsageDB).filter(UserUsageDB.user_id == user_id).first()
         
@@ -307,6 +319,7 @@ def reset_monthly_usage(user_id: str) -> None:
             db.commit()
     finally:
         db.close()
+
 
 
 def get_user_chat_history(user_id: str, limit: int = None) -> List[dict]:
