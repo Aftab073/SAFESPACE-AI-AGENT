@@ -1,15 +1,23 @@
 import streamlit as st
 import requests
 import os
-from dotenv import load_dotenv
 import json
 
+# Try to load dotenv, but don't fail if not available
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
 
-# Load environment variables
-load_dotenv()
+# Get BACKEND_URL from environment or Streamlit secrets
+BACKEND_URL = os.getenv("BACKEND_URL")
+if not BACKEND_URL:
+    try:
+        BACKEND_URL = st.secrets["BACKEND_URL"]
+    except:
+        BACKEND_URL = "http://localhost:8000"
 
-
-BACKEND_URL = os.getenv("BACKEND_URL", "http://localhost:8000")
 
 
 st.set_page_config(page_title="AI Mental Health Therapist", layout="wide")
