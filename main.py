@@ -16,7 +16,7 @@ app = FastAPI(title="SafeSpace AI Mental Health API")
 # Add CORS middleware for frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:8501"],  # Streamlit default port
+    allow_origins=["http://localhost:8501", "https://safespace1.streamlit.app/"],  # Streamlit default port
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
