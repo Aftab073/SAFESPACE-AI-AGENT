@@ -10,18 +10,10 @@ try:
 except ImportError:
     pass
 
-# Get BACKEND_URL from environment or Streamlit secrets
-BACKEND_URL = os.getenv("BACKEND_URL")
-if not BACKEND_URL:
-    try:
-        BACKEND_URL = st.secrets["BACKEND_URL"]
-    except:
-        BACKEND_URL = "http://localhost:8000"
-
-
+# Get BACKEND_URL
+BACKEND_URL = os.getenv("BACKEND_URL", "http://localhost:8000")
 
 st.set_page_config(page_title="AI Mental Health Therapist", layout="wide")
-
 
 # Initialize session state
 if "token" not in st.session_state:
@@ -40,16 +32,23 @@ def make_authenticated_request(endpoint, method="GET", data=None):
     }
     
     try:
+        url = f"{BACKEND_URL}{endpoint}"
+        
         if method == "POST":
-            response = requests.post(f"{BACKEND_URL}{endpoint}", 
-                                   json=data, headers=headers, timeout=30)
+            response = requests.post(url, json=data, headers=headers, timeout=30)
         else:
-            response = requests.get(f"{BACKEND_URL}{endpoint}", 
-                                  headers=headers, timeout=30)
+            response = requests.get(url, headers=headers, timeout=30)
+        
         response.raise_for_status()
         return response.json()
+    except requests.exceptions.ConnectionError:
+        st.error(f"❌ Connection Error: Cannot connect to backend")
+        return None
+    except requests.exceptions.Timeout:
+        st.error(f"⏱️ Timeout Error: Backend took too long to respond")
+        return None
     except requests.exceptions.RequestException as e:
-        st.error(f"API Error: {str(e)}")
+        st.error(f"🚨 API Error: {str(e)}")
         return None
 
 
@@ -77,7 +76,7 @@ def login_page():
                         try:
                             response = requests.post(f"{BACKEND_URL}/auth/login", 
                                                    json={"email": email, "password": password})
-
+                            
                             if response.status_code == 200:
                                 data = response.json()
                                 st.session_state.token = data["access_token"]
@@ -156,8 +155,7 @@ def chat_page():
     
     with col2:
         if st.button("🗑️ Clear History"):
-            if st.session_state.chat_history:  # Only if there's history
-                # Call delete endpoint
+            if st.session_state.chat_history:
                 try:
                     response = requests.delete(
                         f"{BACKEND_URL}/chat/history",
@@ -191,7 +189,7 @@ def chat_page():
         # Get AI response
         response_data = make_authenticated_request("/ask", "POST", {"message": user_input})
         if response_data:
-            ai_response = f'{response_data["response"]} WITH TOOL: [{response_data.get("tool_used", "None")}]'
+            ai_response = response_data["response"]
             st.session_state.chat_history.append({"role": "assistant", "content": ai_response})
         else:
             st.session_state.chat_history.append({"role": "assistant", "content": "Sorry, I'm having technical difficulties. Please try again."})
@@ -199,6 +197,7 @@ def chat_page():
         st.rerun()
 
 
+# Main app routing
 if st.session_state.token is None:
     login_page()
 else:

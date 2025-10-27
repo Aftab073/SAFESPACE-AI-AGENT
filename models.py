@@ -11,22 +11,19 @@ class UserCreate(BaseModel):
     @field_validator('password')
     @classmethod
     def validate_password(cls, v):
+        if not v or len(v.strip()) == 0:
+            raise ValueError('Password cannot be empty')
+        if len(v) < 6:
+            raise ValueError('Password must be at least 6 characters')
         if len(v.encode('utf-8')) > 72:
             raise ValueError('Password is too long (max 72 characters)')
-        if len(v) < 8:
-            raise ValueError('Password must be at least 8 characters')
         return v
 
 class UserLogin(BaseModel):
     email: EmailStr  
     password: str
     
-    @field_validator('password')
-    @classmethod
-    def validate_password(cls, v):
-        if len(v.encode('utf-8')) > 72:
-            raise ValueError('Password is too long (max 72 characters)')
-        return v
+    
 
 class User(BaseModel):
     id: str
