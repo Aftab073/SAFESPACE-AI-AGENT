@@ -17,12 +17,20 @@ ALGORITHM = os.getenv("JWT_ALGORITHM", "HS256")
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("JWT_ACCESS_TOKEN_EXPIRE_MINUTES", 1440))
 
 def hash_password(password: str) -> str:
-    """Hash a password using bcrypt"""
+    """Hash a password using bcrypt (max 72 bytes)"""
+    # Bcrypt has a 72-byte limit, truncate if necessary
+    if len(password.encode('utf-8')) > 72:
+        password = password[:72]
     return pwd_context.hash(password)
+
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     """Verify a password against its hash"""
+    # Apply same truncation for verification
+    if len(plain_password.encode('utf-8')) > 72:
+        plain_password = plain_password[:72]
     return pwd_context.verify(plain_password, hashed_password)
+
 
 def create_access_token(user_id: str, email: str) -> str:
     """Create JWT access token"""
