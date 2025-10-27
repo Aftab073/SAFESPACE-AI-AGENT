@@ -10,6 +10,24 @@ SafeSpace is an AI-powered mental health companion built with FastAPI and Stream
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.104+-green)
 ![Streamlit](https://img.shields.io/badge/Streamlit-1.28+-red)
 
+## AI Features
+
+### MedGemma Integration
+- Powered by **Groq's OpenAI GPT model** for therapeutic responses
+- Uses MedGemma for medical-grade mental health guidance
+- Evidence-based, empathetic conversations
+
+### Emergency Response System
+- **Automatic crisis detection** for suicidal ideation or self-harm
+- **Twilio-powered emergency calling** to safety helplines
+- Immediate intervention when needed
+
+### Therapist Finder
+- Location-based therapist recommendations
+- Licensed professional contact information
+- Quick access to local mental health resources
+
+
 ## ✨ Features
 
 - 🔐 **Secure Authentication** - JWT-based user authentication with password hashing
