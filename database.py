@@ -307,3 +307,48 @@ def reset_monthly_usage(user_id: str) -> None:
             db.commit()
     finally:
         db.close()
+
+
+def get_user_chat_history(user_id: str, limit: int = None) -> List[dict]:
+    """Get user's chat history with optional limit"""
+    db = SessionLocal()
+    
+    try:
+        query = db.query(ChatHistoryDB).filter(
+            ChatHistoryDB.user_id == user_id
+        ).order_by(ChatHistoryDB.created_at.desc())
+        
+        # Apply limit if specified
+        if limit:
+            query = query.limit(limit)
+        
+        chat_entries = query.all()
+        
+        history = []
+        for entry in chat_entries:
+            history.append({
+                "id": entry.id,
+                "message": entry.message,
+                "response": entry.response,
+                "tool_used": entry.tool_used,
+                "created_at": entry.created_at.isoformat()
+            })
+        
+        return history
+    finally:
+        db.close()
+
+
+def clear_user_chat_history(user_id: str) -> bool:
+    """Delete all chat history for a user"""
+    db = SessionLocal()
+    
+    try:
+        db.query(ChatHistoryDB).filter(ChatHistoryDB.user_id == user_id).delete()
+        db.commit()
+        return True
+    except Exception as e:
+        db.rollback()
+        return False
+    finally:
+        db.close()
